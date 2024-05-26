@@ -214,85 +214,112 @@ vector<int> MaxSubarraySumOptimal(vector<int> &arr, int n)
     return {maxi, s, e};
 } // TC = O(n), SC = O(1)
 
-int BestTimeToBuyAndSellStock(vector<int> &arr,int n){
+int BestTimeToBuyAndSellStock(vector<int> &arr, int n)
+{
     // If we are selling on ith day, we have to buy mimimum price from 1st to i-1
-    // {7,1,5,3,6,4}, buying on 6 so selling before it which is the min 
-    int profit=0,mini=arr[0],cost=0;
-    for(int i=1;i<n;i++){
-        cost=arr[i]-mini;
-        profit=max(profit,cost);
-        mini=min(mini,arr[i]);
-    } return profit;
+    // {7,1,5,3,6,4}, buying on 6 so selling before it which is the min
+    int profit = 0, mini = arr[0], cost = 0;
+    for (int i = 1; i < n; i++)
+    {
+        cost = arr[i] - mini;
+        profit = max(profit, cost);
+        mini = min(mini, arr[i]);
+    }
+    return profit;
 } // TC = O(n), SC=(1)
 
-void rearrangeArrayElementsBySignBrute(vector<int>& arr,int n){
-// There are n numbers and +ve=-ve=n/2. 
-// we have to reaarange them alternatively, The order in which they numbers were present must be same.
-    vector<int> pos,neg;
-    for(int i=0;i<n;i++){
-        if(arr[i]<0) neg.push_back(arr[i]);
-        else pos.push_back(arr[i]);
+void rearrangeArrayElementsBySignBrute(vector<int> &arr, int n)
+{
+    // There are n numbers and +ve=-ve=n/2.
+    // we have to reaarange them alternatively, The order in which they numbers were present must be same.
+    vector<int> pos, neg;
+    for (int i = 0; i < n; i++)
+    {
+        if (arr[i] < 0)
+            neg.push_back(arr[i]);
+        else
+            pos.push_back(arr[i]);
     }
-// we observe that all the +ves are at even places and -ves at odd places
-    for(int i=0;i<n/2;i++){ // we are iterting to n/2 places coz in both pos[] and neg[] array we have n/2 values only
-        arr[2*i]=pos[i];
-        arr[2*i+1]=neg[i];
+    // we observe that all the +ves are at even places and -ves at odd places
+    for (int i = 0; i < n / 2; i++)
+    { // we are iterting to n/2 places coz in both pos[] and neg[] array we have n/2 values only
+        arr[2 * i] = pos[i];
+        arr[2 * i + 1] = neg[i];
     }
 } // TC = O(n) + O(n/2), SC = O(n)
 
 // +ves and -ves are equal
-vector<int> rearrangeArrayElementsBySignOptimal(vector<int>& arr,int n){
-// There are n numbers and +ve=-ve=n/2. 
-// we have to reaarange them alternatively, The order in which they numbers were present must be same.
-// we observe that all the +ves are at even places and -ves at odd places
-    vector<int> ans(n,0);
-    int pos=0, neg=1;
-    for(int i=0;i<n;i++){
-        if(arr[i]>0){
-            ans[pos]=arr[i];
-            pos+=2;
-        }else{
-            ans[neg]=arr[i];
-            neg+=2;
+vector<int> rearrangeArrayElementsBySignOptimal(vector<int> &arr, int n)
+{
+    // There are n numbers and +ve=-ve=n/2.
+    // we have to reaarange them alternatively, The order in which they numbers were present must be same.
+    // we observe that all the +ves are at even places and -ves at odd places
+    vector<int> ans(n, 0);
+    int pos = 0, neg = 1;
+    for (int i = 0; i < n; i++)
+    {
+        if (arr[i] > 0)
+        {
+            ans[pos] = arr[i];
+            pos += 2;
         }
-    } return ans;
+        else
+        {
+            ans[neg] = arr[i];
+            neg += 2;
+        }
+    }
+    return ans;
 } // TC = O(n), SC = O(n)
 
 // +ves and -ves are not equal, cant solve with the optimal solution so going back to the Brute Force
-vector<int> rearrangeArrayElementsBySignBruteVariety2(vector<int>& arr,int n){
-// There are n numbers and +ve=-ve=n/2. 
-// we have to reaarange them alternatively, The order in which they numbers were present must be same.
-// we observe that all the +ves are at even places and -ves at odd places
-    vector<int> pos,neg;
-    for(int i=0;i<n;i++){
-        if(arr[i]>0){
+vector<int> rearrangeArrayElementsBySignBruteVariety2(vector<int> &arr, int n)
+{
+    // There are n numbers and +ve=-ve=n/2.
+    // we have to reaarange them alternatively, The order in which they numbers were present must be same.
+    // we observe that all the +ves are at even places and -ves at odd places
+    vector<int> pos, neg;
+    for (int i = 0; i < n; i++)
+    {
+        if (arr[i] > 0)
+        {
             pos.push_back(arr[i]);
-        }else neg.push_back(arr[i]);
+        }
+        else
+            neg.push_back(arr[i]);
     }
-    if(pos.size()>neg.size()){
-        for(int i =0;i<neg.size();i++){
-            arr[2*i]=pos[i];
-            arr[2*i+1]=neg[i];
+    if (pos.size() > neg.size())
+    {
+        for (int i = 0; i < neg.size(); i++)
+        {
+            arr[2 * i] = pos[i];
+            arr[2 * i + 1] = neg[i];
         }
         // at which index we should start pushing the value in the array
-        int index=neg.size()*2;
-        for(int i=neg.size();i<pos.size();i++){
-            arr[index]=pos[i];
+        int index = neg.size() * 2;
+        for (int i = neg.size(); i < pos.size(); i++)
+        {
+            arr[index] = pos[i];
             index++;
         }
-    }else{ // it will be the case where pos.size()<=neg.size(), for both
-        for(int i =0;i<pos.size();i++){
-            arr[2*i]=pos[i];
-            arr[2*i+1]=neg[i];
+    }
+    else
+    { // it will be the case where pos.size()<=neg.size(), for both
+        for (int i = 0; i < pos.size(); i++)
+        {
+            arr[2 * i] = pos[i];
+            arr[2 * i + 1] = neg[i];
         } // if they are equal it wont go below
-        int index=pos.size()*2;
-        for(int i=pos.size();i<neg.size();i++){
-            arr[index]=neg[i];
+        int index = pos.size() * 2;
+        for (int i = pos.size(); i < neg.size(); i++)
+        {
+            arr[index] = neg[i];
             index++;
         }
-    } return arr; // as we did all the changes in the same array
+    }
+    return arr; // as we did all the changes in the same array
 } // TC = O(n) + O(min(pos,neg))(we are running for the array which is smaller in size out of pos[] annd neg[]) + O(leftOvers), SC = O(n)
-// TC = if there are no pos then we have to put all the neg in the array so 
+// TC = if there are no pos then we have to put all the neg in the array so
 // O(0 for pos) and O(n for neg) and viceversa
 // So for such case it will be O(2n)
 
@@ -300,35 +327,143 @@ vector<int> rearrangeArrayElementsBySignBruteVariety2(vector<int>& arr,int n){
 // TC = O(n) + O(n/2)
 // SC = O(1)
 
-
 // nextPermutationBrute, The Brute Force, Generate all Permutations in sorted ordera and do a linear search to find the number and at the next index we will have the Next Permutation
 // TC = O(N!) to generate all the Permutations * (N) arranging the N Numbers(3 here)
 // SC = O(N!) to store all the Permutations
 
 // nextPermutationBetter, next_permutation(arr.begin(),arr.end()); in CPP only using stl
 
-vector<int> nextPermutationOptimal(vector<int> &arr,int n){
-// Find the Dip point
-// if the dip is not there then its the last number in the permutation just reverse it to get the answer
-// 54321 => 12345
-    int ind=-1;
-    for(int i=n-2;i>=0;i--){
-        if(arr[i]<arr[i+1]){
-            ind=i;
+vector<int> nextPermutationOptimal(vector<int> &arr, int n)
+{
+    // Find the Dip point
+    // if the dip is not there then its the last number in the permutation just reverse it to get the answer
+    // 54321 => 12345
+    int ind = -1;
+    for (int i = n - 2; i >= 0; i--)
+    {
+        if (arr[i] < arr[i + 1])
+        {
+            ind = i;
             break;
         }
     }
-    if(ind==-1) reverse(arr.begin(),arr.end());
-// Finding the number which is greater then i but smaller then the lot and swap it
-    for(int i=n-1;i>ind;i--){
-        if(arr[i]>arr[ind]){
-            swap(arr[i],arr[ind]);
+    if (ind == -1)
+        reverse(arr.begin(), arr.end());
+    // Finding the number which is greater then i but smaller then the lot and swap it
+    for (int i = n - 1; i > ind; i--)
+    {
+        if (arr[i] > arr[ind])
+        {
+            swap(arr[i], arr[ind]);
             break;
         }
-    }   
-    reverse(arr.begin()+ind+1,arr.end()); // reversing rest of the array
+    }
+    reverse(arr.begin() + ind + 1, arr.end()); // reversing rest of the array
     return arr;
 } // TC = O(3n) near about, SC=O(1)
+
+// Brute : i=0, j=i+1 to n-1 flag=true; if all the numbers after
+// i are smaller then ohk else leader=false and break.
+// TC = near about O(n^2), SC = O(n) if the numbers are in descending order then all are leaders
+vector<int> leaderInAnArray(vector<int> &arr, int n)
+{
+    // Iterate from the back and if we find a number which is the biggest in the lot but is smaller then the current number which means oour current number is bigger then all the numbers to its right.
+    // [10,22,12,3,0,6], 6 is the biggest number from ind=3to5
+    // if so 12 is greater then 6 which means 12 is greater then all the numbers to its right.
+    vector<int> leaders;
+    int maxi = INT_MIN; // number greatest to the right
+    for (int i = n - 1; i >= 0; i--)
+    { // O(n)
+        if (arr[i] > maxi)
+        {
+            leaders.push_back(arr[i]);
+            maxi = arr[i];
+        }
+    }
+    return leaders;
+    // if they ask for sorting then nlogn if everyone is a leader
+} // TC = O(n), SC=O(n) for returning the answer
+
+// longestConsecutiveSequence
+// Brute :  i=0 i.e. 102 search for 103 linearly it not then i++;
+// 100 then iterate to find 101 found then look for 102 and so on and keep on increasing the cnt.
+
+// Better : Sort it, assume that longest=1, keep lastSmaller which is the number-1,
+// i=0, 1 do we have 0 no then the sequence will start from here
+// lastsmallest=1
+// i=2 ls=1 yes then so on...
+// will write the Brute and Better again in few Days
+
+int longestConsecutiveSequence(vector<int> &arr, int n)
+{
+    unordered_set<int> st;
+    if (n == 0)
+        return 0;
+    int longest = 1;
+    for (int i = 0; i < n; i++)
+    { // O(n)
+        st.insert(arr[i]);
+    }
+    for (auto it : st)
+    { // This loop will go for number of elements in st-1 times O(n)
+        // O(n) as we are starting from the value and moving forward, 1,2,3,4, we are only moving forward if we found that it is the starting element
+        // So total O(2n)
+        if (st.find(it - 1) == st.end())
+        { // for 100 if dont find 99 from here cnt starts
+            int cnt = 1;
+            int x = it;
+            while (st.find(x + 1) != st.end())
+            { //
+                x = x + 1;
+                cnt++;
+            }
+            longest = max(longest, cnt);
+        }
+    }
+    // st => {102,4,100,1,101,3,2}
+    //  will be at 102 and will look at 101 if it exist then we dont want to start from the mid
+    //  will go to 4 and same
+    //  at 100 we dont have 99 so will move forward and increase the count it we find 101,102
+    return longest;
+} // TC = O(3n), SC=O(n)
+
+// void markRow(int arr[][10],int i,int n){
+//     for(int j=0;j<n;j++){
+//         if(arr[i][j]!=0) arr[i][j]=-1;
+//     }
+// }
+// void markCol(int arr[][10],int j,int n){
+//     for(int i=0;i<n;i++){
+//         if(arr[i][j]!=0) arr[i][j]=-1;
+//     }
+// }
+
+vector<vector<int>> setMatrixZeroesBetter(vector<vector<int>> &matrix, int n)
+{
+    int row[n] = {0};
+    int col[n] = {0};
+    for (int i = 0; i < n; i++)
+    {
+        for (int j = 0; j < n; j++) // O(n*m)
+        {
+            if (matrix[i][j] == 0)
+            {
+                row[i] = 1;
+                col[j] = 1;
+            }
+        }
+    }
+    for (int i = 0; i < n; i++)
+    {
+        for (int j = 0; j < n; j++) //O(n*m)
+        {
+            if (row[i] == 0 || col[j] == 0)
+            {
+                matrix[i][j] = 0;
+            }
+        }
+    }return matrix;
+} // TC = O(2*n*m), SC = O(n)+O(m)
 
 int main()
 {
@@ -381,29 +516,90 @@ int main()
     for (auto it : res4)
         cout << it << " "; //  7 2 6
 
-    vector<int> vec5={7,1,5,3,6,4};
-    int n5=vec5.size();
-    cout<<endl<<endl<<"Best Time to Buy and Sell Stocks "<<endl;
-    cout<<BestTimeToBuyAndSellStock(vec5,n5)<<endl;
+    vector<int> vec5 = {7, 1, 5, 3, 6, 4};
+    int n5 = vec5.size();
+    cout << endl
+         << endl
+         << "Best Time to Buy and Sell Stocks " << endl;
+    cout << BestTimeToBuyAndSellStock(vec5, n5) << endl;
 
-    vector<int> vec6={3,1,-2,-5,2,-4};
-    int n6=vec6.size();
-    cout<<endl<<"rearrange Array Elements By Sign, Brute"<<endl;
+    vector<int> vec6 = {3, 1, -2, -5, 2, -4};
+    int n6 = vec6.size();
+    cout << endl
+         << "rearrange Array Elements By Sign, Brute" << endl;
     // rearrangeArrayElementsBySignBrute(vec6,n6);
     // for(auto it : vec6) cout<<it<<" ";
 
-    cout<<endl<<endl<<"rearrange Array Elements By Sign, Optimal"<<endl;
-    vector<int> ans=rearrangeArrayElementsBySignOptimal(vec6,n6);
-    for(auto it : ans) cout<<it<<" "; // 3 -2 1 -5 2 -4
+    cout << endl
+         << endl
+         << "rearrange Array Elements By Sign, Optimal" << endl;
+    vector<int> ans = rearrangeArrayElementsBySignOptimal(vec6, n6);
+    for (auto it : ans)
+        cout << it << " "; // 3 -2 1 -5 2 -4
 
     // cout<<endl<<endl<<"rearrange Array Elements By Sign, Brute Variety 2"<<endl;
     // vector<int> ans=rearrangeArrayElementsBySignBruteVariety2(vec6,n6);
     // for(auto it : ans) cout<<it<<" "; // 3 -2 1 -5 2 -4
 
-    cout<<endl<<endl<<"Next Permutation"<<endl;
-    vector<int> vec7={2,1,5,4,3,0,0};
-    int n7=vec7.size();
-    vector<int> res7=nextPermutationOptimal(vec7,n7);
-    for(auto it:res7) cout<<it<<" "; // 2 3 0 0 1 4 5
+    cout << endl
+         << endl
+         << "Next Permutation" << endl;
+    vector<int> vec7 = {2, 1, 5, 4, 3, 0, 0};
+    int n7 = vec7.size();
+    vector<int> res7 = nextPermutationOptimal(vec7, n7);
+    for (auto it : res7)
+        cout << it << " "; // 2 3 0 0 1 4 5
+
+    cout << endl
+         << endl
+         << "Leader in an Array" << endl;
+    vector<int> vec8 = {10, 22, 12, 3, 0, 6};
+    int n8 = vec8.size();
+    vector<int> res8 = leaderInAnArray(vec8, n8);
+    for (auto it : res8)
+        cout << it << " "; // 6 12 22
+
+    cout << endl
+         << endl
+         << "longest Consecutive Sequence" << endl;
+    vector<int> vec9 = {102, 4, 100, 1, 101, 3, 2, 1, 1};
+    int n9 = vec9.size();
+    cout << longestConsecutiveSequence(vec9, n9); // 4
+
+    // int n10 = 4;
+    // int arr10[n10][n10] = {{1, 1, 1, 1}, {1, 0, 0, 1}, {1, 1, 0, 1}, {1, 1, 0, 1}};
+    // for(int i=0;i<n10;i++){ // O(n*m)
+    //     for(int j=0;j<n10;j++){
+    //         if(arr10[i][j]==0){
+    //             markRow(arr10,i,n10); // O(n)
+    //             markCol(arr10,j,n10); //O(m)
+    //         }
+    //     }
+    // }
+    // for(int i=0;i,n10;i++){
+    //     for(int j=0;j<n10;j++){ //O(n*m)
+    //         if(arr10[i][j]==-1) arr10[i][j]=0;
+    //     }
+    // }
+
+    cout<<endl<<endl<<"setMatrixZeroesBetter"<<endl;
+    vector<vector<int>> vec10=
+    {{1, 1, 1, 1},
+    {1, 0, 1, 1},
+    {1, 1, 0, 1},
+    {1, 0, 0, 1}};
+    int n10 = vec10.size();
+    vector<vector<int>> res10= setMatrixZeroesBetter(vec10, n10);
+    for(int i=0;i<n10;i++){
+        for(int j=0;j<n10;j++){
+            cout<<res10[i][j]<<" ";
+        }cout<<endl;
+    }
+/*
+0 0 0 0
+0 0 1 0
+0 1 0 0
+0 0 0 0
+*/
     return 0;
 }
