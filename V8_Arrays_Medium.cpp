@@ -427,16 +427,37 @@ int longestConsecutiveSequence(vector<int> &arr, int n)
     return longest;
 } // TC = O(3n), SC=O(n)
 
-// void markRow(int arr[][10],int i,int n){
-//     for(int j=0;j<n;j++){
-//         if(arr[i][j]!=0) arr[i][j]=-1;
-//     }
-// }
-// void markCol(int arr[][10],int j,int n){
-//     for(int i=0;i<n;i++){
-//         if(arr[i][j]!=0) arr[i][j]=-1;
-//     }
-// }
+void markRow(vector<vector<int>> &matrix, int n,int i){
+    for(int j=0;j<n;j++){
+        if(matrix[i][j]!=0){
+            matrix[i][j]=-1;
+        }
+    }
+}
+void markCol(vector<vector<int>> &matrix, int n,int j){
+    for(int i=0;i<n;i++){
+        if(matrix[i][j]!=0){
+            matrix[i][j]=-1;
+        }
+    }
+}
+vector<vector<int>> setMatrixZeroesBrute(vector<vector<int>> &matrix, int n){
+    for(int i=0;i<n;i++){
+        for(int j=0;j<n;j++){ // O(n*m)
+            if(matrix[i][j]==0){
+                markRow(matrix,n,i); // O(n)
+                markCol(matrix,n,j); //O(n)
+            }
+        }
+    }
+    for(int i=0;i<n;i++){
+        for(int j=0;j<n;j++){ // O(n*m)
+            if(matrix[i][j]==-1){
+                matrix[i][j]=0;
+            }
+        }
+    }return matrix;
+}
 
 vector<vector<int>> setMatrixZeroesBetter(vector<vector<int>> &matrix, int n)
 {
@@ -457,13 +478,70 @@ vector<vector<int>> setMatrixZeroesBetter(vector<vector<int>> &matrix, int n)
     {
         for (int j = 0; j < n; j++) //O(n*m)
         {
-            if (row[i] == 0 || col[j] == 0)
+            if (row[i] || col[j]) // if any one of them is 1 then the value at index is 
             {
                 matrix[i][j] = 0;
             }
         }
     }return matrix;
 } // TC = O(2*n*m), SC = O(n)+O(m)
+
+vector<vector<int>> setMatrixZeroesOptimal(vector<vector<int>> &matrix, int n){  
+    // using col1 and row1 as Hashmaps
+    int col0=1;
+    for(int i=0;i<n;i++){
+        for(int j=0;j<n;j++){ // O(n*m)
+            if(matrix[i][j]==0){
+                matrix[i][0]=0;
+                if(j!=0) matrix[0][j]=0; 
+                else col0=0;
+            }
+        }
+    }
+    for(int i=1;i<n;i++){
+        for(int j=1;j<n;j++){ // O(n*m)
+            if(matrix[i][j]!=0){
+                if(matrix[i][0]==0 || matrix[0][j]==0){
+                    matrix[i][j]=0; 
+                }
+            } // as we are traversing in the smaller matrix not in the hypothetical hashmaps no need to take care of col0
+        }
+    }
+    if(matrix[0][0]==0){
+        for(int j=0;j<n;j++) matrix[0][j]=0;
+    }
+    if(col0==0){
+        for(int i=0;i<n;i++) matrix[i][0]=0;
+    }
+    return matrix;
+} // TC = O(2*n*m), SC=O(1)
+
+
+int findAllSubarraysWithGivenSum(vector<int> &arr, int k) {
+    int n = arr.size(); // size of the given array
+    unordered_map<int, int> mpp; // Using unordered_map for storing prefix sums
+    int preSum = 0, cnt = 0;
+
+    mpp[0] = 1; // Setting 0 in the map
+
+    for (int i = 0; i < n; i++) {
+        // Add current element to prefix sum
+        preSum += arr[i];
+
+        // Calculate preSum - k
+        int remove = preSum - k;
+
+        // Add the number of subarrays that sum to k
+        if (mpp.find(remove) != mpp.end()) {
+            cnt += mpp[remove];
+        }
+
+        // Update the count of the prefix sum in the map
+        mpp[preSum]++;
+    }
+    return cnt;
+}
+ // TC = O(n), SC = O(n)
 
 int main()
 {
@@ -559,47 +637,42 @@ int main()
     for (auto it : res8)
         cout << it << " "; // 6 12 22
 
-    cout << endl
-         << endl
-         << "longest Consecutive Sequence" << endl;
-    vector<int> vec9 = {102, 4, 100, 1, 101, 3, 2, 1, 1};
-    int n9 = vec9.size();
-    cout << longestConsecutiveSequence(vec9, n9); // 4
-
-    // int n10 = 4;
-    // int arr10[n10][n10] = {{1, 1, 1, 1}, {1, 0, 0, 1}, {1, 1, 0, 1}, {1, 1, 0, 1}};
-    // for(int i=0;i<n10;i++){ // O(n*m)
-    //     for(int j=0;j<n10;j++){
-    //         if(arr10[i][j]==0){
-    //             markRow(arr10,i,n10); // O(n)
-    //             markCol(arr10,j,n10); //O(m)
-    //         }
-    //     }
-    // }
-    // for(int i=0;i,n10;i++){
-    //     for(int j=0;j<n10;j++){ //O(n*m)
-    //         if(arr10[i][j]==-1) arr10[i][j]=0;
-    //     }
-    // }
-
-    cout<<endl<<endl<<"setMatrixZeroesBetter"<<endl;
-    vector<vector<int>> vec10=
-    {{1, 1, 1, 1},
-    {1, 0, 1, 1},
-    {1, 1, 0, 1},
-    {1, 0, 0, 1}};
+    vector<vector<int>> vec10 = {
+        {1, 1, 1, 1},
+        {1, 0, 0, 1},
+        {1, 1, 0, 1},
+        {1, 1, 1, 1}
+    };
     int n10 = vec10.size();
-    vector<vector<int>> res10= setMatrixZeroesBetter(vec10, n10);
-    for(int i=0;i<n10;i++){
-        for(int j=0;j<n10;j++){
-            cout<<res10[i][j]<<" ";
-        }cout<<endl;
+
+    // cout << endl << endl << "setMatrixZeroesBrute" << endl;
+    // vector<vector<int>> res10 = setMatrixZeroesBrute(vec10, n10);
+
+    // cout<<endl<<endl<<"setMatrixZeroesBetter"<<endl;
+    // vector<vector<int>> res10= setMatrixZeroesBetter(vec10, n10);
+    
+    cout<<endl<<endl<<"setMatrixZeroesOptimal"<<endl;
+    vector<vector<int>> res10= setMatrixZeroesOptimal(vec10, n10);
+
+    for (int i = 0; i < n10; i++) {
+        for (int j = 0; j < n10; j++) {
+            cout << res10[i][j] << " ";
+        }
+        cout << endl;
     }
+
 /*
+1 0 0 1
 0 0 0 0
-0 0 1 0
-0 1 0 0
 0 0 0 0
+1 0 0 1
 */
+
+    cout << endl << endl << "Find All Subarrays With Given Sum" << endl;
+    vector<int> vec11 = {3, 1, 2, 4};
+    int k11 = 6;
+    int cnt11 = findAllSubarraysWithGivenSum(vec11, k11);
+    cout << "The number of subarrays is: " << cnt11 << "\n";
+
     return 0;
 }
