@@ -542,6 +542,25 @@ int findAllSubarraysWithGivenSum(vector<int> &arr, int k) {
     return cnt;
 }
  // TC = O(n), SC = O(n)
+vector<vector<int>> RotateMatrixBrute(vector<vector<int>> &arr,int n){
+    vector<vector<int>> rotatedMatrix(n,vector<int>(n));
+    for(int i=0;i<n;i++){
+        for(int j=0;j<n;j++){
+            rotatedMatrix[j][n-i-1]=arr[i][j];
+        }
+    }return rotatedMatrix;
+} // TC = SC = O(n^2)
+
+vector<vector<int>> RotateMatrixBrute(vector<vector<int>> &arr,int n){
+    for(int i=0;i<n-1;i++){
+        for(int j=i+1;j<n;j++){ // O(n/2*n/2) ase we are considering only half of the array
+            swap(arr[i][j],arr[j][i]);
+        }
+    }
+    for(int i=0;i<n;i++){
+        reverse(arr[i].begin(),arr[i].end());
+    } // O(n*n/2)
+} // TC = O(n^2+n^2), SC=O(1)
 
 int main()
 {
@@ -672,7 +691,28 @@ int main()
     vector<int> vec11 = {3, 1, 2, 4};
     int k11 = 6;
     int cnt11 = findAllSubarraysWithGivenSum(vec11, k11);
-    cout << "The number of subarrays is: " << cnt11 << "\n";
+    cout << "The number of subarrays is: " << cnt11 << "\n"; // 2
+
+    vector<vector<int>> vec12 = {
+        {1,2,3,4},
+        {5,6,7,8},
+        {9,10,11,12},
+        {13,14,15,16}
+    };
+    int n12 = vec12.size();
+    vector<vector<int>> res12 = RotateMatrixBrute(vec12, n12);
+    for (int i = 0; i < n12; i++) {
+        for (int j = 0; j < n12; j++) {
+            cout << res12[i][j] << " ";
+        }
+        cout << endl;
+    }
+/*
+13 9 5 1
+14 10 6 2 
+15 11 7 3
+16 12 8 4
+*/
 
     return 0;
 }
